@@ -1,0 +1,18 @@
+CREATE TABLE naver_news (
+	id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	title VARCHAR(300) NOT NULL DEFAULT '',
+	content TEXT NOT NULL DEFAULT '',
+	link VARCHAR(100) NOT NULL DEFAULT '',
+	section VARCHAR(10) NOT NULL DEFAULT '',
+	pubDate DATE
+);
+
+DROP TABLE naver_news;
+
+SELECT * FROM naver_news;
+
+INSERT INTO naver_news (title, content, section)
+VALUES ('기사', '내용', '테스트');
+
+
+SELECT * FROM test_n8n_chat_histories;

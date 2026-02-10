@@ -1,0 +1,125 @@
+-- p05.sql
+
+-- 1
+SELECT
+  c.customer_name AS 고객명,
+  s.product_name AS 상품명,
+  s.total_amount AS 주문금액
+FROM customers c
+JOIN sales s ON c.customer_id = s.customer_id
+ORDER BY s.total_amount DESC
+LIMIT 10;
+
+-- 2
+SELECT
+  c.customer_type AS 고객유형,
+  COUNT(*) AS 주문건수,
+  AVG(s.total_amount) AS 평균주문금액
+FROM customers c
+JOIN sales s ON c.customer_id = s.customer_id
+GROUP BY c.customer_type
+ORDER BY 평균주문금액 DESC;
+
+-- 3
+SELECT
+  c.customer_name AS 고객명,
+  COALESCE(s.product_name, '없음') AS 상품명
+FROM customers c
+LEFT JOIN sales s ON c.customer_id = s.customer_id
+ORDER BY c.customer_name;
+
+-- 4
+SELECT
+  c.customer_name AS 고객명,
+  c.customer_type AS 고객유형,
+  c.join_date AS 가입일,
+  s.product_name AS 상품명,
+  s.category AS 카테고리,
+  s.total_amount AS 주문금액,
+  s.order_date AS 주문일
+FROM customers c
+JOIN sales s ON c.customer_id = s.customer_id
+ORDER BY s.order_date DESC;
+
+-- 5
+SELECT
+  c.customer_name,
+  c.customer_type,
+  s.product_name,
+  s.total_amount,
+  s.order_date
+FROM customers c
+JOIN sales s ON c.customer_id = s.customer_id
+WHERE c.customer_type = 'VIP'
+ORDER BY s.total_amount DESC;
+
+-- 7
+SELECT
+  c.customer_id,
+  c.customer_name,
+  c.customer_type,
+  COUNT(*) AS 주문횟수,
+  SUM(s.total_amount) AS 총구매금액,
+  AVG(s.total_amount) AS 평균구매금액,
+  MAX(s.order_date) AS 최근주문일
+FROM customers c
+JOIN sales s ON c.customer_id = s.customer_id
+GROUP BY c.customer_id, c.customer_name, c.customer_type
+ORDER BY 평균구매금액 DESC;
+
+-- 6
+SELECT *
+FROM customers c
+INNER JOIN sales s ON c.customer_id = s.customer_id
+WHERE s.category = '전자제품'
+  AND s.order_date BETWEEN '2024-07-01' AND '2024-12-31'
+ORDER BY s.order_date;.
+
+-- 8
+SELECT
+  c.customer_id,
+  c.customer_name,
+  c.customer_type,
+  c.join_date,
+  COUNT(s.id) AS 주문횟수,
+  COALESCE(SUM(s.total_amount), 0) AS 총구매금액,
+  COALESCE(AVG(s.total_amount), 0.0) AS 평균구매금액,
+  COALESCE(MAX(s.total_amount), 0) AS 최대구매금액
+FROM customers c
+LEFT JOIN sales s ON c.customer_id = s.customer_id
+GROUP BY c.customer_id, c.customer_name, c.customer_type, c.join_date
+ORDER BY 총구매금액 DESC;
+
+-- 9
+SELECT
+  c.customer_type AS 고객유형,
+  s.category AS 카테고리,
+  COUNT(*) AS 주문건수,
+  SUM(s.total_amount) AS 총매출액
+FROM customers c
+JOIN sales s ON c.customer_id = s.customer_id
+GROUP BY c.customer_type, s.category
+ORDER BY 총매출액 DESC;
+
+-- 10
+SELECT
+  c.customer_id, c.customer_name, c.customer_type,
+  COUNT(s.id) AS 구매횟수,
+  COALESCE(SUM(s.total_amount), 0) AS 총구매액,
+  CASE
+    WHEN COUNT(s.id) = 0 THEN '잠재'
+    WHEN COUNT(s.id) >= 10 THEN '플래티넘'
+    WHEN COUNT(s.id) >= 5 THEN '골드'
+    WHEN COUNT(s.id) >= 3 THEN '실버'
+    ELSE '브론즈'
+  END AS 활동등급,
+  CASE
+    WHEN COALESCE(SUM(s.total_amount), 0) >= 5000000 THEN '로얄'
+    WHEN COALESCE(SUM(s.total_amount), 0) >= 2000000 THEN '최우수'
+    WHEN COALESCE(SUM(s.total_amount), 0) >= 1000000 THEN '우수'
+    WHEN COALESCE(SUM(s.total_amount), 0) > 0 THEN '일반'
+    ELSE '신규'
+  END AS 구매등급
+FROM customers c
+LEFT JOIN sales s ON c.customer_id = s.customer_id
+GROUP BY c.customer_id, c.customer_name, c.customer_type;
