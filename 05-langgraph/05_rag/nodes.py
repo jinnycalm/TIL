@@ -22,6 +22,9 @@ def rewrite_question(state: MessagesState):
     """사용자 질문을 재작성"""
     messages = state['messages']
     # TODO: 나중에 전체 맥락을 이해하고 질문을 정제하는 것으로 바꾸기
+
+    # TODO: rewrite 는 총 2번만 하고, 그때까지 답이 안나오면, 기본모델로 답변 생성하기
+
     question = messages[0].content
     prompt = REWRITE_QUESTION_PROMPT.format(original_question=question)
     response = res_llm.invoke(prompt)
