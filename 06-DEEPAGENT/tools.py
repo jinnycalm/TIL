@@ -8,6 +8,8 @@ from backend import dt_backend
 
 SLACK_TOKEN = os.getenv('SLACK_BOT_TOKEN')
 slack_client = WebClient(token=SLACK_TOKEN)
+social_channel_id = os.getenv('SOCIAL_CHANNEL_ID')
+
 
 @tool(parse_docstring=True) # LLM에게 Tool 설명을 docstring에서
 def send_slack_message(text: str, file_path: str | None = None) -> str:
